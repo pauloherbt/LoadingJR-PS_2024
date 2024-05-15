@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: loading-ps2024
+  profiles:
+    active: dev
