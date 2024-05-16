@@ -7,29 +7,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.peagadev.loadingps2024.enums.PostType;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Data
-@Table(name = "posts")
-@Builder
-@NoArgsConstructor
+@Table(name = "users")
 @AllArgsConstructor
-public class Post {
+@NoArgsConstructor
+@Data
+@Builder
+public class User {
 
     @Id @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String title;
-    private String description;
+    private String name;
+    private String email;
+    private String password;
     @CreationTimestamp
     private LocalDateTime createdAt;
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-    private PostType postType;
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User user;
+    @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+    private Set<Post> posts = new HashSet<>();
 }
