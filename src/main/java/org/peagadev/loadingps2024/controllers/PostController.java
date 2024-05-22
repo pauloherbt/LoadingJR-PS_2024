@@ -20,23 +20,23 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping
-    public ResponseEntity<Page<Post>> getAllPosts(Pageable pageable) {
+    public ResponseEntity<Page<PostDTO>> getAllPosts(Pageable pageable) {
         return ResponseEntity.ok(postService.getAllPosts(pageable));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getById(@PathVariable String id) {
+    public ResponseEntity<PostDTO> getById(@PathVariable String id) {
         return ResponseEntity.ok(postService.getPostById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody PostDTO post, UriComponentsBuilder uriBuilder) {
-        Post createdPost = postService.createPost(post);
+    public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO post, UriComponentsBuilder uriBuilder) {
+        PostDTO createdPost = postService.createPost(post);
         return ResponseEntity.created(uriBuilder.path("/posts/{id}").build(createdPost.getId())).body(createdPost);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@RequestBody PostDTO post, @PathVariable String id) {
+    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO post, @PathVariable String id) {
         return ResponseEntity.ok(postService.updatePost(post,id));
     }
     @DeleteMapping("/{id}")
