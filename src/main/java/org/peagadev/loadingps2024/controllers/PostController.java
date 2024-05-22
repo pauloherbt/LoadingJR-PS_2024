@@ -39,8 +39,8 @@ public class PostController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@RequestBody PostDTO post, @PathVariable String id) {
-        return ResponseEntity.ok(postService.updatePost(post,id));
+    public ResponseEntity<PostDTO> updatePost(@RequestPart("image") MultipartFile image, @RequestPart("post") PostDTO post, @PathVariable String id) {
+        return ResponseEntity.ok(postService.updatePost(post,image,id));
     }
 
     @DeleteMapping("/{id}")
