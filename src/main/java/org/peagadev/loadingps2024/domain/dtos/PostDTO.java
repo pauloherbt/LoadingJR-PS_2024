@@ -1,5 +1,6 @@
 package org.peagadev.loadingps2024.domain.dtos;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,10 +16,13 @@ import java.time.LocalDateTime;
 public class PostDTO {
 
     private String id;
+    @NotBlank
     private String title;
+    @NotBlank
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    @NotBlank
     private PostType postType;
     private String imgUrl;
     private UserDTO user;
