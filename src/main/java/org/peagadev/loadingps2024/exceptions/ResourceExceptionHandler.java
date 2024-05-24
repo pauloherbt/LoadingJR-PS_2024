@@ -53,5 +53,12 @@ public class ResourceExceptionHandler{
         return problem;
     }
 
+    @ExceptionHandler(CloudOperationException.class)
+    public ProblemDetail handleCloudOperationException(CloudOperationException ex) {
+        var problem = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);
+        problem.setTitle("Service Unavailable");
+        problem.setProperty("description",ex.getMessage());
+        return problem;
+    }
 
 }
