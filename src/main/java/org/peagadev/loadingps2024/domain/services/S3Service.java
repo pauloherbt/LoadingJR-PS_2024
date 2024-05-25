@@ -41,6 +41,8 @@ public class S3Service {
         }catch (IOException | SdkException e){
             throw new CloudOperationException(e.getMessage());
         }
+        log.info("Image uploaded successfully");
         return String.format("https://s3.%s.amazonaws.com/%s/%s", bucketRegion, bucketName, imgKey);
     }
+    //missing delete img
 }

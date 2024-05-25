@@ -1,5 +1,6 @@
 package org.peagadev.loadingps2024.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.peagadev.loadingps2024.domain.dtos.LoginDto;
 import org.peagadev.loadingps2024.domain.dtos.RespLoginDto;
@@ -32,13 +33,13 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserDTO> createUser(@RequestBody UserDTO user, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<UserDTO> createUser(@Valid @RequestBody UserDTO user, UriComponentsBuilder uriBuilder) {
         UserDTO createdUser = userService.createUser(user);
         return ResponseEntity.created(uriBuilder.path("/users/{id}").build(createdUser.getId())).body(createdUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO user, @PathVariable String id) {
+    public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO user, @PathVariable String id) {
         return ResponseEntity.ok(userService.updateUser(user,id));
     }
 
@@ -49,7 +50,7 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<RespLoginDto> authenticateUser(@RequestBody LoginDto login) {
+    public ResponseEntity<RespLoginDto> authenticateUser(@Valid @RequestBody LoginDto login) {
         authenticationManager.authenticate(UsernamePasswordAuthenticationToken.unauthenticated(login.getEmail(), login.getPassword()));
         return ResponseEntity.ok(userService.authenticate(login));
     }
