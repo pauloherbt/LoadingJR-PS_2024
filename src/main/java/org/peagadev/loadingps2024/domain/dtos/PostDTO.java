@@ -1,6 +1,7 @@
 package org.peagadev.loadingps2024.domain.dtos;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.peagadev.loadingps2024.domain.entities.Post;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@NoArgsConstructor
 public class PostDTO {
 
     private String id;
@@ -18,6 +20,7 @@ public class PostDTO {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private PostType postType;
+    private String imgUrl;
     private UserDTO user;
 
     public PostDTO(Post post) {
@@ -27,6 +30,7 @@ public class PostDTO {
         this.createdAt = post.getCreatedAt();
         this.updatedAt = post.getUpdatedAt();
         this.postType = post.getPostType();
+        this.imgUrl = post.getImgUrl();
         if(post.getUser() != null)
             user=new UserDTO(post.getUser());
     }

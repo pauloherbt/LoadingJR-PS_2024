@@ -29,6 +29,7 @@ public class Post {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
     private PostType postType;
+    private String imgUrl;
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;

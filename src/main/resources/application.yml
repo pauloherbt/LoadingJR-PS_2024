@@ -6,3 +6,9 @@ spring:
 security:
   jwt:
     secret-key: ces6FWLBPCNSdXDt4bcvX7ub+pU7GLc2enwYBD+W0+M=
+aws:
+  credentials:
+    ACCESS-KEY: ${AWS-ACCESS-KEY}
+    SECRET-KEY: ${AWS-SECRET-KEY}
+    BUCKET-NAME: ${AWS-BUCKET-NAME}
+    BUCKET-REGION: ${AWS-BUCKET-REGION}
