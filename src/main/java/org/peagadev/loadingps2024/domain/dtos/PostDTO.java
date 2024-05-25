@@ -1,6 +1,7 @@
 package org.peagadev.loadingps2024.domain.dtos;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class PostDTO {
     private String description;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    @NotBlank
+    @NotNull
     private PostType postType;
     private String imgUrl;
     private UserDTO user;

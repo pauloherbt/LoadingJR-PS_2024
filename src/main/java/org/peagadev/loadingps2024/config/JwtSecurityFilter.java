@@ -6,10 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.peagadev.loadingps2024.domain.repository.UserRepository;
 import org.peagadev.loadingps2024.domain.services.JwtService;
 import org.peagadev.loadingps2024.domain.services.UserService;
-import org.peagadev.loadingps2024.exceptions.ResourceExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -17,11 +15,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.method.annotation.ExceptionHandlerExceptionResolver;
-import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 
 import java.io.IOException;
 import java.nio.file.AccessDeniedException;
@@ -58,5 +53,7 @@ public class JwtSecurityFilter extends OncePerRequestFilter {
             e.printStackTrace();
             resolver.resolveException(request,response,null,e);
         }
+
     }
+
 }

@@ -2,18 +2,22 @@ package org.peagadev.loadingps2024.exceptions;
 
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.nio.file.AccessDeniedException;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @RequiredArgsConstructor
 @ControllerAdvice
@@ -58,6 +62,30 @@ public class ResourceExceptionHandler{
         var problem = ProblemDetail.forStatus(HttpStatus.SERVICE_UNAVAILABLE);
         problem.setTitle("Service Unavailable");
         problem.setProperty("description",ex.getMessage());
+        return problem;
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Invalid request");
+        class ErrorField{
+             public String field;
+             public String message;
+            public ErrorField(String field, String message) {
+                this.field = field;
+                this.message = message;
+            }
+        }
+        problem.setProperty("errors",ex.getBindingResult().getFieldErrors().stream().map(error->new ErrorField(error.getField(), error.getDefaultMessage())).toList());
+        return problem;
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ProblemDetail handleConstraintException(ConstraintViolationException ex) {
+        var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
+        problem.setTitle("Invalid request");;
+        problem.setProperty("error:",ex.getConstraintViolations().stream().map(x->x.getMessage()).toList());
         return problem;
     }
 
