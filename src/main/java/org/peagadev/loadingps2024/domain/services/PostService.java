@@ -29,7 +29,7 @@ public class PostService {
         Post newPost = Post.builder().title(post.getTitle())
                 .description(post.getDescription())
                 .postType(post.getPostType())
-                .imgUrl(s3Service.putImage(image,user.getId()+image.getOriginalFilename()))
+                .imgUrl(image!=null?s3Service.putImage(image,user.getId()+image.getOriginalFilename()):null)
                 .user(user)
                 .build();
         return new PostDTO(postRepository.save(newPost));
@@ -40,7 +40,7 @@ public class PostService {
         User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow();
         updatedPost.setTitle(post.getTitle());
         updatedPost.setDescription(post.getDescription());
-        updatedPost.setImgUrl(s3Service.putImage(image,user.getId()+image.getOriginalFilename()));
+        updatedPost.setImgUrl(image!=null?s3Service.putImage(image,user.getId()+image.getOriginalFilename()):null);
         updatedPost.setPostType(post.getPostType());
         return new PostDTO(postRepository.save(updatedPost));
     }
