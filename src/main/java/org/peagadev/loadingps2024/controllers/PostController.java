@@ -1,13 +1,16 @@
 package org.peagadev.loadingps2024.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.peagadev.loadingps2024.domain.dtos.PostDTO;
 import org.peagadev.loadingps2024.domain.entities.Post;
 import org.peagadev.loadingps2024.domain.services.PostService;
 import org.peagadev.loadingps2024.domain.services.S3Service;
+import org.peagadev.loadingps2024.validations.ImageExtensionValidation;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -17,6 +20,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/posts")
+@Validated
 public class PostController {
 
     private final PostService postService;
@@ -33,13 +37,19 @@ public class PostController {
     }
 
     @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestPart("image") MultipartFile image, @RequestPart("post_data") PostDTO post, UriComponentsBuilder uriBuilder) {
+    @Validated
+    public ResponseEntity<PostDTO> createPost(
+            @RequestPart(value = "image",required = false)
+            @ImageExtensionValidation
+            MultipartFile image,
+            @Valid @RequestPart("post_data") PostDTO post,
+            UriComponentsBuilder uriBuilder) {
         PostDTO createdPost = postService.createPost(post,image);
         return ResponseEntity.created(uriBuilder.path("/posts/{id}").build(createdPost.getId())).body(createdPost);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<PostDTO> updatePost(@RequestPart("image") MultipartFile image, @RequestPart("post") PostDTO post, @PathVariable String id) {
+    public ResponseEntity<PostDTO> updatePost(@Valid @RequestPart(value = "image",required = false) MultipartFile image, @RequestPart("post_data") PostDTO post, @PathVariable String id) {
         return ResponseEntity.ok(postService.updatePost(post,image,id));
     }
 
