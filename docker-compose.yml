@@ -1,10 +1,34 @@
 version: '2'
 services:
   db:
-    image: 'postgres'
-    container_name: postgres
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+    build:
+      context: ./postgres
+    image: peagaa/postgres:latest
+    container_name: postgres_loading
+    networks:
+      - backend
     ports:
       - '5432:5432'
+  app:
+    build:
+      dockerfile: ./Dockerfile
+    image: peagaa/loading-api
+    ports:
+      - '8080:8080'
+    container_name: loading-api
+    depends_on:
+      - db
+    networks:
+      - backend
+    environment:
+      AWS-ACCESS-KEY: ${AWS_ACCESS_KEY}
+      AWS-SECRET-KEY: ${AWS_SECRET_KEY}
+      AWS-BUCKET-NAME: ${AWS_BUCKET_NAME}
+      AWS-BUCKET-REGION: ${AWS_BUCKET_REGION}
+      DB_USER: peaga
+      DB_PASSWORD: peaga
+      DB_NAME: loading
+      DB_URL: postgres_loading
+networks:
+  backend:
+    driver: 'bridge'

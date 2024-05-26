@@ -2,7 +2,7 @@ spring:
   application:
     name: loading-ps2024
   profiles:
-    active: dev
+    active: prod
 security:
   jwt:
     secret-key: ces6FWLBPCNSdXDt4bcvX7ub+pU7GLc2enwYBD+W0+M=
