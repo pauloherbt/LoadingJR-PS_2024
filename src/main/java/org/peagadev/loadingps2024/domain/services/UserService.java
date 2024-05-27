@@ -10,9 +10,9 @@ import org.peagadev.loadingps2024.domain.repository.UserRepository;
 import org.peagadev.loadingps2024.exceptions.ResourceNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -55,9 +55,9 @@ public class UserService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) {
         log.info("Loading user by username: {}", username);
-        return userRepository.findByEmail(username).orElseThrow(()->new UsernameNotFoundException("User Not Found"));
+        return userRepository.findByEmail(username).orElseThrow(()->new ResourceNotFoundException("User Not Found"));
     }
 
     public RespLoginDto authenticate(LoginDto loginDto) {
@@ -65,5 +65,9 @@ public class UserService implements UserDetailsService {
         UserDetails userDetails = loadUserByUsername(loginDto.getEmail());
         String token = jwtService.generateToken(userDetails);
         return RespLoginDto.builder().token(token).username(userDetails.getUsername()).expiresAt(jwtService.getExpiration(token)).build();
+    }
+    public User getLoggedUser(){
+        return userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .orElseThrow(()->new ResourceNotFoundException("User Not Found"));
     }
 }
