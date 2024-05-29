@@ -21,11 +21,11 @@ import java.util.UUID;
 public class PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final S3Service s3Service;
 
     public PostDTO createPost(PostDTO post, MultipartFile image) {
-        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow();
+        User user = userService.getLoggedUser();
         Post newPost = Post.builder().title(post.getTitle())
                 .description(post.getDescription())
                 .postType(post.getPostType())
@@ -37,7 +37,7 @@ public class PostService {
 
     public PostDTO updatePost(PostDTO post,MultipartFile image,String id) {
         Post updatedPost = postRepository.findById(id).orElseThrow(()->new ResourceNotFoundException("Entity Not Found"));
-        User user = userRepository.findByEmail(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow();
+        User user = userService.getLoggedUser();
         updatedPost.setTitle(post.getTitle());
         updatedPost.setDescription(post.getDescription());
         updatedPost.setImgUrl(image!=null?s3Service.putImage(image,user.getId()+image.getOriginalFilename()):null);
