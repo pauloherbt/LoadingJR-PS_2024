@@ -1,23 +1,18 @@
 package org.peagadev.loadingps2024.exceptions;
 
 import io.jsonwebtoken.JwtException;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.nio.file.AccessDeniedException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 @RequiredArgsConstructor
 @ControllerAdvice
@@ -25,6 +20,7 @@ import java.util.Map;
 public class ResourceExceptionHandler{
 
     @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ProblemDetail handleResourceNotFoundException(ResourceNotFoundException ex) {
         log.error(ex.getMessage(),ex.fillInStackTrace());
         var problem = ProblemDetail.forStatus(HttpStatus.NOT_FOUND);
@@ -50,6 +46,7 @@ public class ResourceExceptionHandler{
     }
 
     @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public ProblemDetail handleJwtException(BadCredentialsException ex) {
         var problem = ProblemDetail.forStatus(HttpStatus.UNAUTHORIZED);
         problem.setTitle("Bad login credentials");
@@ -66,6 +63,7 @@ public class ResourceExceptionHandler{
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
         problem.setTitle("Invalid request");
@@ -82,9 +80,10 @@ public class ResourceExceptionHandler{
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ProblemDetail handleConstraintException(ConstraintViolationException ex) {
         var problem = ProblemDetail.forStatus(HttpStatus.BAD_REQUEST);
-        problem.setTitle("Invalid request");;
+        problem.setTitle("Invalid request");
         problem.setProperty("error:",ex.getConstraintViolations().stream().map(x->x.getMessage()).toList());
         return problem;
     }
